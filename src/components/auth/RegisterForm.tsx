@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import type { RegisterFormData } from '../../types/auth.types';
-import { UserType } from '../../types/auth.types';
+import { useNavigate } from 'react-router-dom';
+import { UserType, type RegisterFormData } from '../../types/auth.types';
 import Input from '../common/Input';
 import Button from '../common/Button';
 
@@ -9,6 +9,7 @@ interface RegisterFormProps {
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<RegisterFormData>({
     nome: '',
     email: '',
@@ -25,7 +26,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
       ...prev,
       [id]: value
     }));
-    // Limpar erro do campo quando usuário começar a digitar
     if (errors[id as keyof RegisterFormData]) {
       setErrors(prev => ({
         ...prev,
@@ -68,6 +68,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
       console.log('Dados de registro:', formData);
       // Aqui você fará a integração com a API backend
       alert('Cadastro realizado com sucesso!');
+      
+      // Redirecionar para login após cadastro
+      navigate('/login');
     }
   };
 

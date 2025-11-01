@@ -13,7 +13,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
             BreShop
           </h1>
           <p className="text-breshop-navy/70 text-sm">
-            +Um consumo consciente, sustentável & único
+            Um consumo consciente, sustentável & único
           </p>
         </div>
         

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import type { LoginFormData } from '../../types/auth.types';
+import { useNavigate } from 'react-router-dom';
+import { type LoginFormData } from '../../types/auth.types';
 import Input from '../common/Input';
 import Button from '../common/Button';
 
@@ -8,6 +9,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     senha: ''
@@ -21,7 +23,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       ...prev,
       [id]: value
     }));
-    // Limpar erro do campo quando usuário começar a digitar
     if (errors[id as keyof LoginFormData]) {
       setErrors(prev => ({
         ...prev,
@@ -54,6 +55,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       console.log('Dados de login:', formData);
       // Aqui você fará a integração com a API backend
       alert('Login realizado com sucesso!');
+      
+      // Redirecionar para home após login
+      navigate('/');
     }
   };
 
