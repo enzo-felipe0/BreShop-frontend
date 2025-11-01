@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserType, type RegisterFormData } from '../../types/auth.types';
+import { useAuth } from '../../contexts/AuthContext';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import authService from '../../services/authService';
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
@@ -11,6 +11,7 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<RegisterFormData>({
     nome: '',
@@ -73,12 +74,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
     setLoading(true);
 
     try {
-      await authService.register({
-        nome: formData.nome,
-        email: formData.email,
-        senha: formData.senha,
-        tipoUsuario: formData.tipoUsuario as 'COMPRADOR' | 'VENDEDOR',
-      });
+      await register(
+        formData.nome,
+        formData.email,
+        formData.senha,
+        formData.tipoUsuario.toUpperCase() as 'COMPRADOR' | 'VENDEDOR'
+      );
 
       alert('Cadastro realizado com sucesso!');
       navigate('/');

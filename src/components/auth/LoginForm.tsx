@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { type LoginFormData } from '../../types/auth.types';
+import { useAuth } from '../../contexts/AuthContext';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import authService from '../../services/authService';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -11,6 +11,7 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -60,11 +61,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     setLoading(true);
 
     try {
-      await authService.login({
-        email: formData.email,
-        senha: formData.senha,
-      });
-
+      await login(formData.email, formData.senha);
       alert('Login realizado com sucesso!');
       navigate('/');
     } catch (error: any) {

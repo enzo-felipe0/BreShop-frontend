@@ -1,4 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
 import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import LoginPage from './pages/auth/LoginPage';
@@ -7,20 +10,36 @@ import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
-    <Routes>
-      {/* Rota Principal */}
-      <Route path="/" element={<HomePage />} />
-      
-      {/* Rotas de Autenticação */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      
-      {/* Rotas de Produtos */}
-      <Route path="/products" element={<ProductsPage />} />
-      
-      {/* Rota 404 - Catch All */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        {/* Rota Principal */}
+        <Route path="/" element={<HomePage />} />
+        
+        {/* Rotas Públicas (redirecionam para home se autenticado) */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+        
+        {/* Produtos - Pública para todos verem, mas com funcionalidades restritas para não autenticados */}
+        <Route path="/products" element={<ProductsPage />} />
+        
+        {/* Rota 404 - Catch All */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 
