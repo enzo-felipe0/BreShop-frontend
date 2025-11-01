@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { type LoginFormData } from '../../types/auth.types';
 import Input from '../common/Input';
 import Button from '../common/Button';
+import authService from '../../services/authService';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -10,6 +11,7 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     senha: ''
@@ -48,16 +50,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateForm()) {
-      console.log('Dados de login:', formData);
-      // Aqui você fará a integração com a API backend
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await authService.login({
+        email: formData.email,
+        senha: formData.senha,
+      });
+
       alert('Login realizado com sucesso!');
-      
-      // Redirecionar para home após login
       navigate('/');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Erro ao fazer login';
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,8 +113,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           </button>
         </div>
 
-        <Button type="submit" variant="primary" fullWidth>
-          Entrar
+        <Button type="submit" variant="primary" fullWidth disabled={loading}>
+          {loading ? 'Entrando...' : 'Entrar'}
         </Button>
       </form>
 
@@ -110,6 +124,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           <button
             onClick={onSwitchToRegister}
             className="text-breshop-navy font-semibold hover:underline"
+            type="button"
           >
             Cadastre-se
           </button>

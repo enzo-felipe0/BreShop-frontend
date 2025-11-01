@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserType, type RegisterFormData } from '../../types/auth.types';
 import Input from '../common/Input';
 import Button from '../common/Button';
+import authService from '../../services/authService';
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
@@ -10,6 +11,7 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<RegisterFormData>({
     nome: '',
     email: '',
@@ -61,16 +63,30 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (validateForm()) {
-      console.log('Dados de registro:', formData);
-      // Aqui você fará a integração com a API backend
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await authService.register({
+        nome: formData.nome,
+        email: formData.email,
+        senha: formData.senha,
+        tipoUsuario: formData.tipoUsuario as 'COMPRADOR' | 'VENDEDOR',
+      });
+
       alert('Cadastro realizado com sucesso!');
-      
-      // Redirecionar para login após cadastro
-      navigate('/login');
+      navigate('/');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Erro ao realizar cadastro';
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,8 +156,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
           </select>
         </div>
 
-        <Button type="submit" variant="primary" fullWidth>
-          Cadastrar
+        <Button type="submit" variant="primary" fullWidth disabled={loading}>
+          {loading ? 'Cadastrando...' : 'Cadastrar'}
         </Button>
       </form>
 
@@ -151,6 +167,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
           <button
             onClick={onSwitchToLogin}
             className="text-breshop-navy font-semibold hover:underline"
+            type="button"
           >
             Fazer Login
           </button>
