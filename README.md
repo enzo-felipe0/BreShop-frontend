@@ -1,73 +1,206 @@
-# React + TypeScript + Vite
+# 🛍️ BreShop - E-commerce para Brechós Online
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**BreShop** é uma plataforma de e-commerce voltada exclusivamente para brechós online, onde vendedores podem cadastrar seus produtos e compradores podem navegar, comprar e realizar pagamentos de forma segura e organizada.
 
-Currently, two official plugins are available:
+> **Um consumo consciente, sustentável & único**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📋 Índice
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Funcionalidades Implementadas](#funcionalidades-implementadas)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Como Executar](#como-executar)
+- [Rotas Disponíveis](#rotas-disponíveis)
+- [Autor](#autor)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🎯 Sobre o Projeto
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+O BreShop resolve o problema da desorganização nas vendas de brechós online, que atualmente dependem de redes sociais como Instagram e WhatsApp para divulgar produtos e negociar com clientes. A plataforma centraliza todo o processo de compra e venda, tornando-o mais eficiente, confiável e prático.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Objetivos
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Organizar e profissionalizar a venda de produtos em brechós online
+- Oferecer uma plataforma centralizada que simplifica a gestão de estoque, pagamentos e entregas
+- Criar um ambiente especializado para consumidores conscientes
+
+### Público-Alvo
+
+- **Vendedores**: Donos de brechós virtuais que buscam uma plataforma estruturada para seus negócios
+- **Compradores**: Pessoas que gostam de comprar roupas através de brechós e valorizam segurança e praticidade
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+### Frontend
+
+- **React 18** - Biblioteca JavaScript para construção de interfaces
+- **TypeScript** - Superset JavaScript com tipagem estática
+- **Vite** - Build tool moderna e rápida
+- **Tailwind CSS** - Framework CSS utility-first para estilização
+- **React Router DOM v6** - Biblioteca de roteamento para navegação
+
+### Ferramentas de Desenvolvimento
+
+- **ESLint** - Linter para identificar e corrigir problemas no código
+- **PostCSS** - Ferramenta para transformar CSS com plugins JavaScript
+- **Autoprefixer** - Plugin PostCSS para adicionar prefixos de navegadores automaticamente
+
+---
+
+## ✨ Funcionalidades Implementadas
+
+### Autenticação de Usuários
+
+- ✅ **Cadastro de usuários** (vendedores e compradores) com validação de formulários
+- ✅ **Login de usuários** com autenticação segura
+- ✅ **Validação em tempo real** de campos de formulário
+- ✅ **Diferenciação de tipos de usuário** (comprador/vendedor)
+
+### Interface e Navegação
+
+- ✅ **Sistema de rotas** com React Router v6
+- ✅ **Design responsivo** adaptável a diferentes tamanhos de tela
+- ✅ **Página inicial** com apresentação do projeto
+- ✅ **Página 404** para rotas não encontradas
+- ✅ **Paleta de cores personalizada** baseada na identidade visual do BreShop
+
+### Componentes Reutilizáveis
+
+- ✅ **Input** - Componente de entrada com validação e mensagens de erro
+- ✅ **Button** - Botão customizável com variantes de estilo
+- ✅ **AuthLayout** - Layout compartilhado para páginas de autenticação
+
+---
+
+## 📁 Estrutura do Projeto
+
+
+```
+breshop-frontend/
+├── src/
+│ ├── components/
+│ │ ├── auth/
+│ │ │ ├── AuthLayout.tsx # Layout para páginas de autenticação
+│ │ │ ├── LoginForm.tsx # Formulário de login
+│ │ │ └── RegisterForm.tsx # Formulário de registro
+│ │ └── common/
+│ │ ├── Button.tsx # Componente de botão reutilizável
+│ │ └── Input.tsx # Componente de input reutilizável
+│ ├── pages/
+│ │ ├── auth/
+│ │ │ ├── LoginPage.tsx # Página de login
+│ │ │ └── RegisterPage.tsx # Página de registro
+│ │ ├── HomePage.tsx # Página inicial
+│ │ ├── ProductsPage.tsx # Página de produtos (placeholder)
+│ │ └── NotFoundPage.tsx # Página 404
+│ ├── types/
+│ │ └── auth.types.ts # Tipos TypeScript para autenticação
+│ ├── App.tsx # Configuração de rotas principais
+│ ├── main.tsx # Ponto de entrada da aplicação
+│ └── index.css # Estilos globais com Tailwind
+├── public/ # Arquivos estáticos
+├── index.html # HTML principal
+├── package.json # Dependências e scripts
+├── tailwind.config.js # Configuração do Tailwind CSS
+├── tsconfig.json # Configuração do TypeScript
+├── vite.config.ts # Configuração do Vite
+└── README.md # Documentação do projeto
+---
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📦 Pré-requisitos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Antes de começar, certifique-se de ter instalado em sua máquina:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Node.js** (versão 18 ou superior)
+- **npm** ou **yarn** (gerenciador de pacotes)
+- **Git** (para clonar o repositório)
+
+---
+
+## 🔧 Instalação
+
+### 1. Clone o repositório
+
 ```
+git clone https://github.com/seu-usuario/breshop-frontend.git
+cd breshop-frontend
+```
+
+### 2. Instale as dependências
+
+```
+npm install
+```
+
+## ▶️ Como Executar
+
+### Modo de Desenvolvimento
+
+Inicie o servidor de desenvolvimento:
+
+```
+npm run dev
+```
+
+O projeto estará disponível em: [**http://localhost:5173/**](http://localhost:5173/)
+
+### Build para Produção
+
+Para gerar a versão otimizada para produção:
+
+```
+npm run build
+```
+
+---
+
+## 🗺️ Rotas Disponíveis
+
+| Rota | Componente | Descrição |
+|------|-----------|-----------|
+| `/` | `HomePage` | Página inicial com apresentação do BreShop |
+| `/login` | `LoginPage` | Página de autenticação de usuários |
+| `/register` | `RegisterPage` | Página de cadastro de novos usuários |
+| `/products` | `ProductsPage` | Página de catálogo de produtos (em desenvolvimento) |
+| `*` (qualquer outra) | `NotFoundPage` | Página 404 para rotas não encontradas |
+
+## 🎨 Paleta de Cores
+
+O projeto utiliza uma paleta de cores personalizada inspirada no conceito de consumo consciente e sustentável:
+
+| Cor | Código Hex | Uso |
+|-----|-----------|------|
+| **Beige** | `#F5E6D3` | Background principal, tons neutros |
+| **Pink** | `#E8A5A0` | Botões secundários, destaques |
+| **Navy** | `#2C3E50` | Textos principais, botões primários |
+| **Gold** | `#B8A76B` | Bordas, acentos, estados hover |
+| **Coral** | `#D89B94` | Elementos de validação, destaques secundários |
+
+📄 Requisitos Funcionais Implementados
+Conforme o PRD (Product Requirements Document):
+
+✅ RF01: O sistema permite que o vendedor crie uma conta informando nome, e-mail, senha e tipo de usuário
+
+✅ RF02: O sistema autentica os usuários através de e-mail e senha
+
+🔄 RF03: Cadastro de produtos (próximo passo)
+
+🔄 RF04: Exibição de catálogo público (próximo passo)
+
+🔄 RF05: Carrinho de compras e checkout (próximo passo)
+
+## 👨‍💻 Autor
+Enzo Felipe Prudencio Avelino Lima
+Matrícula: 20240065606
+
+## 📝 Licença
+Este projeto foi desenvolvido como parte de um trabalho acadêmico.
