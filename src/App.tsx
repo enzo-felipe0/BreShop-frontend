@@ -7,6 +7,7 @@ import ProductsPage from './pages/ProductsPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProductFormPage from './pages/ProductFormPage';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
       <Routes>
         {/* Rota Principal */}
         <Route path="/" element={<HomePage />} />
-        
+
         {/* Rotas Públicas (redirecionam para home se autenticado) */}
         <Route
           path="/login"
@@ -32,10 +33,20 @@ function App() {
             </PublicRoute>
           }
         />
-        
+
         {/* Produtos - Pública para todos verem, mas com funcionalidades restritas para não autenticados */}
         <Route path="/products" element={<ProductsPage />} />
-        
+
+        {/* Rota de cadastro de produto - Protegida */}
+        <Route
+          path="/seller/products/new"
+          element={
+            <ProtectedRoute>
+              <ProductFormPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Rota 404 - Catch All */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

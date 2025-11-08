@@ -13,10 +13,9 @@ export default {
         'breshop-gold': '#B8A76B',
         'breshop-coral': '#D89B94',
       },
-      fontFamily: {
-        'display': ['Poppins', 'sans-serif'],
-      }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp'), 
+  ],
 }
