@@ -29,13 +29,6 @@ const Navbar: React.FC = () => {
 
           {isAuthenticated && user ? (
             <>
-              <Link
-                to="/products"
-                className="text-breshop-navy hover:text-breshop-gold transition"
-              >
-                Produtos
-              </Link>
-
               {/* Link adicional para vendedores */}
               {user.tipoUsuario === 'VENDEDOR' && (
                 <Link
