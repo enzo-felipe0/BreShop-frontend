@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/layout/Navbar';
+import Button from '../components/common/Button';
 import productService from '../services/productService';
+import { useCart } from '../contexts/CartContext'; 
+import { useAuth } from '../contexts/AuthContext'; 
 
-interface ProductImage {
+export interface ProductImage {
   id: string;
   url: string;
 }
 
-interface Product {
+export interface Product {
   id: string;
   nome: string;
   descricao: string;
@@ -25,6 +28,8 @@ interface Product {
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart(); // Use o hook do carrinho
+  const { user } = useAuth(); // Use o hook de autenticação
 
   useEffect(() => {
     loadProducts();
@@ -40,6 +45,19 @@ const ProductsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddToCart = (product: Product) => {
+    if (!user) {
+      alert('Você precisa estar logado para adicionar produtos ao carrinho.');
+      return;
+    }
+    if (user.tipoUsuario !== 'COMPRADOR') {
+      alert('Apenas compradores podem adicionar produtos ao carrinho.');
+      return;
+    }
+    addToCart(product, 1);
+    alert(`${product.nome} adicionado ao carrinho!`);
   };
 
   if (loading) {
@@ -67,51 +85,56 @@ const ProductsPage: React.FC = () => {
             <p className="text-xl text-breshop-navy/70 mb-4">
               Nenhum produto cadastrado ainda
             </p>
-            <p className="text-sm text-breshop-navy/50">
-              Faça login como vendedor para cadastrar produtos
-            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {products.map(product => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition"
+                className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col justify-between hover:shadow-xl transition"
               >
-                {/* Imagem do produto */}
-                <div className="h-48 bg-gray-200 overflow-hidden">
-                  {product.fotos.length > 0 ? (
-                    <img
-                      src={`http://localhost:3000${product.fotos[0].url}`}
-                      alt={product.nome}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      Sem imagem
+                <div>
+                  <div className="h-48 bg-gray-200 overflow-hidden">
+                    {product.fotos.length > 0 ? (
+                      <img
+                        src={`${import.meta.env.VITE_API_URL.replace('/api', '')}${product.fotos[0].url}`}
+                        alt={product.nome}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        Sem imagem
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-breshop-navy mb-2 truncate">
+                      {product.nome}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {product.descricao}
+                    </p>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xl font-bold text-breshop-navy">
+                        R$ {product.preco.toFixed(2)}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Estoque: {product.quantidade}
+                      </span>
                     </div>
-                  )}
+                  </div>
                 </div>
 
-                {/* Informações do produto */}
-                <div className="p-4">
-                  <h3 className="text-xl font-bold text-breshop-navy mb-2">
-                    {product.nome}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {product.descricao}
-                  </p>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-2xl font-bold text-breshop-navy">
-                      R$ {product.preco.toFixed(2)}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      Estoque: {product.quantidade}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    Vendedor: {product.vendedor.nome}
-                  </p>
+                {/* Botão de Adicionar ao Carrinho */}
+                <div className="p-4 pt-0">
+                  <Button
+                    onClick={() => handleAddToCart(product)}
+                    variant="primary"
+                    fullWidth
+                    disabled={product.quantidade === 0 || (user?.tipoUsuario === 'VENDEDOR')}
+                  >
+                    {product.quantidade === 0 ? 'Indisponível' : 'Adicionar ao Carrinho'}
+                  </Button>
                 </div>
               </div>
             ))}

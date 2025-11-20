@@ -8,6 +8,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProductFormPage from './pages/ProductFormPage';
+import CartPage from './pages/CartPage.tsx';
 
 function App() {
   return (
@@ -43,6 +44,15 @@ function App() {
           element={
             <ProtectedRoute>
               <ProductFormPage />
+            </ProtectedRoute>
+          }
+        />
+        {/*Rota do carrinho*/}
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <CartPage />
             </ProtectedRoute>
           }
         />
