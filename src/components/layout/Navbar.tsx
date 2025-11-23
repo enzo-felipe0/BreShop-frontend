@@ -20,29 +20,36 @@ const Navbar: React.FC = () => {
         <Link to="/" className="text-3xl font-bold text-breshop-navy font-display">
           BreShop
         </Link>
-        
+
         <div className="space-x-4 flex items-center">
-          <Link 
-            to="/products" 
+          <Link
+            to="/products"
             className="text-breshop-navy hover:text-breshop-gold transition font-medium"
           >
             Produtos
           </Link>
-          
+
           {isAuthenticated && user ? (
             <>
               {user.tipoUsuario === 'VENDEDOR' && (
-                <Link 
-                  to="/seller/products/new" 
+                <Link
+                  to="/seller/products/new"
                   className="text-breshop-navy hover:text-breshop-gold transition font-medium"
                 >
                   Cadastrar Produto
                 </Link>
               )}
-              
+
               <span className="text-breshop-navy">
                 Olá, {user.nome.split(' ')[0]}!
               </span>
+
+              {isAuthenticated && user?.tipoUsuario === 'COMPRADOR' && (
+                <Link to="/comprador/historico" className="text-breshop-navy hover:text-breshop-gold transition font-medium">Minhas Compras</Link>
+              )}
+              {isAuthenticated && user?.tipoUsuario === 'VENDEDOR' && (
+                <Link to="/vendedor/historico" className="text-breshop-navy hover:text-breshop-gold transition font-medium">Minhas Vendas</Link>
+              )}
 
               {/* Ícone do Carrinho */}
               {user.tipoUsuario === 'COMPRADOR' && (
@@ -67,8 +74,8 @@ const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              <Link 
-                to="/login" 
+              <Link
+                to="/login"
                 className="bg-breshop-navy text-white px-4 py-2 rounded-lg hover:bg-breshop-navy/90 transition"
               >
                 Entrar
