@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; 
 import Navbar from '../components/layout/Navbar';
 import Button from '../components/common/Button';
 import { useCart } from '../contexts/CartContext';
 import { type CartItem } from '../contexts/CartContext';
 
 const CartPage: React.FC = () => {
+  const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, checkout, cartTotal } = useCart();
   const [loading, setLoading] = useState(false);
 
@@ -13,10 +14,24 @@ const CartPage: React.FC = () => {
     setLoading(true);
     try {
       const response = await checkout();
-      alert(response.message);
+      alert('✅ Compra finalizada com sucesso!');
+      
+      // Redirecionar para página de produtos (o estoque será recarregado automaticamente)
+      navigate('/products');
+      
     } catch (error: any) {
       console.error(error);
-      alert(error.response?.data?.error || 'Erro ao finalizar a compra');
+      
+      // Tratar erro de estoque insuficiente especificamente
+      const errorMessage = error.response?.data?.error || 'Erro ao finalizar a compra';
+      
+      if (errorMessage.includes('Estoque insuficiente')) {
+        alert(`❌ ${errorMessage}\n\nPor favor, ajuste as quantidades no carrinho.`);
+        // Opcional: recarregar produtos para mostrar estoque atualizado
+        window.location.reload();
+      } else {
+        alert(`❌ ${errorMessage}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -27,7 +42,7 @@ const CartPage: React.FC = () => {
       <Navbar />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-breshop-navy mb-8 font-display">
+        <h1 className="text-3xl font-bold mb-8 text-breshop-navy font-display">
           Seu Carrinho
         </h1>
 
