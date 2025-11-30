@@ -11,6 +11,8 @@ import ProductFormPage from './pages/ProductFormPage';
 import CartPage from './pages/CartPage.tsx';
 import PurchaseHistoryPage from './pages/PurchaseHistoryPage';
 import SalesHistoryPage from './pages/SalesHistoryPage';
+import MyOrdersPage from './pages/MyOrdersPage';
+import OrderDetailsPage from './pages/OrderDetailsPage';
 
 function App() {
   return (
@@ -49,7 +51,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-      {/* Rotas de exibição do histórico de compras e vendas (protegida)*/}
+        {/* Rotas de exibição do histórico de compras e vendas (protegida)*/}
         <Route path="/comprador/historico" element={<ProtectedRoute><PurchaseHistoryPage /></ProtectedRoute>} />
 
         <Route path="/vendedor/historico" element={<ProtectedRoute><SalesHistoryPage /></ProtectedRoute>} />
@@ -60,6 +62,23 @@ function App() {
           element={
             <ProtectedRoute>
               <CartPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <MyOrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:orderId"
+          element={
+            <ProtectedRoute>
+              <OrderDetailsPage />
             </ProtectedRoute>
           }
         />
