@@ -64,8 +64,30 @@ const ProfilePage: React.FC = () => {
             setSuccessMessage('Nome atualizado com sucesso!');
             setIsEditingName(false);
 
-            // Atualizar user no contexto
-            window.location.reload(); // Recarrega para atualizar o AuthContext
+            // ✅ ATUALIZA O LOCALSTORAGE CORRETAMENTE
+            const storedUser = localStorage.getItem('@breshop:user');
+            if (storedUser) {
+                try {
+                    const currentUser = JSON.parse(storedUser);
+                    const updatedUser = {
+                        ...currentUser,
+                        nome: nome.trim()
+                    };
+                    localStorage.setItem('@breshop:user', JSON.stringify(updatedUser));
+                    
+                    // Dispara evento para sincronizar com outros componentes
+                    window.dispatchEvent(new CustomEvent('userUpdated', { 
+                        detail: updatedUser 
+                    }));
+                } catch (parseError) {
+                    console.error('Erro ao parsear localStorage:', parseError);
+                }
+            }
+
+            // Atualiza o estado local imediatamente
+            setNome(nome.trim());
+
+            window.location.reload();
         } catch (error: any) {
             setNomeError(error.response?.data?.error || 'Erro ao atualizar nome');
         } finally {
