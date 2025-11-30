@@ -63,17 +63,32 @@ const Navbar: React.FC = () => {
                   </Link>
                 </>
               )}
-              
-              <span className="text-breshop-navy">
-                Olá, {user.nome.split(' ')[0]}!
-              </span>
 
-              <button
-                onClick={handleLogout}
-                className="bg-breshop-coral text-white px-4 py-2 rounded-lg hover:bg-breshop-pink transition"
-              >
-                Sair
-              </button>
+              {/* Dropdown de Perfil */}
+              <div className="relative group">
+                <button className="flex items-center gap-2 text-breshop-navy hover:text-breshop-gold transition font-medium">
+                  <span>{user.nome.split(' ')[0]}</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block">
+                  <Link 
+                    to="/profile" 
+                    className="block px-4 py-2 text-breshop-navy hover:bg-breshop-beige transition"
+                  >
+                    👤 Meu Perfil
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-breshop-navy hover:bg-breshop-beige transition"
+                  >
+                    🚪 Sair
+                  </button>
+                </div>
+              </div>
             </>
           ) : (
             <>

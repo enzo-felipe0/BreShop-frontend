@@ -13,6 +13,7 @@ import PurchaseHistoryPage from './pages/PurchaseHistoryPage';
 import SalesHistoryPage from './pages/SalesHistoryPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -82,6 +83,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Rotas Protegidas - Todos usuários autenticados */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
 
         {/* Rota 404 - Catch All */}
         <Route path="*" element={<NotFoundPage />} />
