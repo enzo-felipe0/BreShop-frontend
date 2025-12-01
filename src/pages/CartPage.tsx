@@ -14,6 +14,7 @@ const CartPage: React.FC = () => {
     setLoading(true);
     try {
       const response = await checkout();
+      console.log(response);
       alert('✅ Compra finalizada com sucesso!');
       
       // Redirecionar para página de produtos (o estoque será recarregado automaticamente)

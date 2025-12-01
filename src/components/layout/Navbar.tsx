@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -7,12 +7,31 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated } = useAuth();
   const { cartCount } = useCart();
+  
+  // ✅ Estado para controlar dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
     logout();
     alert('Logout realizado com sucesso!');
     navigate('/login');
+    setIsDropdownOpen(false); // Fecha dropdown ao fazer logout
   };
+
+  // ✅ Fecha dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="bg-white shadow-md p-4 sticky top-0 z-50">
@@ -64,30 +83,41 @@ const Navbar: React.FC = () => {
                 </>
               )}
 
-              {/* Dropdown de Perfil */}
-              <div className="relative group">
-                <button className="flex items-center gap-2 text-breshop-navy hover:text-breshop-gold transition font-medium">
+              {/* ✅ Dropdown de Perfil (abre ao clicar) */}
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-2 text-breshop-navy hover:text-breshop-gold transition font-medium"
+                >
                   <span>{user.nome.split(' ')[0]}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg 
+                    className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
                 
-                {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block">
-                  <Link 
-                    to="/profile" 
-                    className="block px-4 py-2 text-breshop-navy hover:bg-breshop-beige transition"
-                  >
-                    👤 Meu Perfil
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-breshop-navy hover:bg-breshop-beige transition"
-                  >
-                    🚪 Sair
-                  </button>
-                </div>
+                {/* ✅ Dropdown Menu (só aparece quando isDropdownOpen é true) */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 animate-fadeIn">
+                    <Link 
+                      to="/profile" 
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="block px-4 py-2 text-breshop-navy hover:bg-breshop-beige transition"
+                    >
+                      👤 Meu Perfil
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-breshop-navy hover:bg-breshop-beige transition"
+                    >
+                      🚪 Sair
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           ) : (
