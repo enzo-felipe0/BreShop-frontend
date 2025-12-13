@@ -53,7 +53,6 @@ const ProductDetailsPage: React.FC = () => {
             setProduct(response.data);
         } catch (error: any) {
             console.error('Erro ao carregar produto:', error);
-            alert('Erro ao carregar detalhes do produto');
             navigate('/products');
         } finally {
             setLoading(false);

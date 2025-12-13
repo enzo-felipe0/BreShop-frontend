@@ -73,7 +73,6 @@ const HomePage: React.FC = () => {
     }
     
     addToCart(product, 1);
-    alert(`${product.nome} adicionado ao carrinho!`);
   };
 
   // Converte para o formato do ProductCard

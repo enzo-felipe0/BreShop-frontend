@@ -61,7 +61,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
     try {
       await login(formData.email, formData.senha);
-      alert('Login realizado com sucesso!');
       navigate('/');
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Erro ao fazer login';
@@ -104,24 +103,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           required
           error={errors.senha}
         />
-
-        <div className="flex items-center justify-between text-sm">
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <input
-              type="checkbox"
-              className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-2 focus:ring-pink-500 cursor-pointer"
-            />
-            <span className="text-gray-600 group-hover:text-gray-900 transition-colors">
-              Lembrar-me
-            </span>
-          </label>
-          <button
-            type="button"
-            className="text-pink-600 hover:text-pink-700 font-medium transition-colors"
-          >
-            Esqueceu a senha?
-          </button>
-        </div>
 
         <button
           type="submit"

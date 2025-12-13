@@ -15,7 +15,6 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    alert('Logout realizado com sucesso!');
     navigate('/login');
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);

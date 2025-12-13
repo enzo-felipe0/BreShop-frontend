@@ -80,7 +80,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
         formData.tipoUsuario.toUpperCase() as 'COMPRADOR' | 'VENDEDOR'
       );
 
-      alert('Cadastro realizado com sucesso!');
       navigate('/');
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Erro ao realizar cadastro';
