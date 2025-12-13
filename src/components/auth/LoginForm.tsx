@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { type LoginFormData } from '../../types/auth.types';
 import { useAuth } from '../../contexts/AuthContext';
 import Input from '../common/Input';
-import Button from '../common/Button';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -74,11 +73,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-breshop-navy mb-6 text-center">
-        Entrar
-      </h2>
+      <div className="text-center mb-6 sm:mb-8">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">
+          Bem-vindo de volta!
+        </h2>
+        <p className="text-sm sm:text-base text-gray-600">
+          Entre para continuar suas compras
+        </p>
+      </div>
       
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
         <Input
           label="E-mail"
           type="email"
@@ -101,31 +105,65 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           error={errors.senha}
         />
 
-        <div className="mb-6 text-right">
+        <div className="flex items-center justify-between text-sm">
+          <label className="flex items-center gap-2 cursor-pointer group">
+            <input
+              type="checkbox"
+              className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-2 focus:ring-pink-500 cursor-pointer"
+            />
+            <span className="text-gray-600 group-hover:text-gray-900 transition-colors">
+              Lembrar-me
+            </span>
+          </label>
           <button
             type="button"
-            className="text-sm text-breshop-navy/70 hover:text-breshop-navy hover:underline"
+            className="text-pink-600 hover:text-pink-700 font-medium transition-colors"
           >
             Esqueceu a senha?
           </button>
         </div>
 
-        <Button type="submit" variant="primary" fullWidth disabled={loading}>
-          {loading ? 'Entrando...' : 'Entrar'}
-        </Button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 sm:py-3.5 rounded-xl font-bold text-base sm:text-lg hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+        >
+          {loading ? (
+            <>
+              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Entrando...
+            </>
+          ) : (
+            <>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              Entrar
+            </>
+          )}
+        </button>
       </form>
 
-      <div className="mt-6 text-center">
-        <p className="text-breshop-navy/70">
-          Não tem uma conta?{' '}
-          <button
-            onClick={onSwitchToRegister}
-            className="text-breshop-navy font-semibold hover:underline"
-            type="button"
-          >
-            Cadastre-se
-          </button>
-        </p>
+      <div className="mt-6 sm:mt-8">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-white text-gray-500">Novo por aqui?</span>
+          </div>
+        </div>
+
+        <button
+          onClick={onSwitchToRegister}
+          type="button"
+          className="mt-4 w-full border-2 border-gray-300 text-gray-700 py-3 sm:py-3.5 rounded-xl font-bold text-base sm:text-lg hover:border-pink-500 hover:text-pink-600 hover:bg-pink-50 transition-all duration-300"
+        >
+          Criar uma conta
+        </button>
       </div>
     </div>
   );

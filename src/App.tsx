@@ -14,6 +14,7 @@ import SalesHistoryPage from './pages/SalesHistoryPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
 import ProfilePage from './pages/ProfilePage';
+import ProductDetailsPage from './pages/ProductDetailsPage.tsx';
 
 function App() {
   return (
@@ -93,6 +94,8 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route path="/products/:productId" element={<ProductDetailsPage />} />
 
         {/* Rota 404 - Catch All */}
         <Route path="*" element={<NotFoundPage />} />

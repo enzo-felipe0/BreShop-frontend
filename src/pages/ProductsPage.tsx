@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/layout/Navbar';
-import Button from '../components/common/Button';
+import { ProductCard } from '../components/common/ProductCard';
 import productService from '../services/productService';
 import { useCart } from '../contexts/CartContext'; 
 import { useAuth } from '../contexts/AuthContext'; 
@@ -27,13 +27,21 @@ export interface Product {
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  
   const { addToCart } = useCart();
   const { user } = useAuth();
 
   useEffect(() => {
     loadProducts();
   }, []);
+
+  useEffect(() => {
+    applyFiltersAndSort();
+  }, [products, searchTerm, sortBy]);
 
   const loadProducts = async () => {
     try {
@@ -45,6 +53,35 @@ const ProductsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const applyFiltersAndSort = () => {
+    let result = [...products];
+
+    // Filtro de busca
+    if (searchTerm) {
+      result = result.filter(product => 
+        product.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Ordenação
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case 'lowest':
+          return a.preco - b.preco;
+        case 'highest':
+          return b.preco - a.preco;
+        case 'name':
+          return a.nome.localeCompare(b.nome);
+        case 'newest':
+        default:
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+    });
+
+    setFilteredProducts(result);
   };
 
   const handleAddToCart = (product: Product) => {
@@ -64,84 +101,160 @@ const ProductsPage: React.FC = () => {
     alert(`${product.nome} adicionado ao carrinho!`);
   };
 
-  // ... (resto do código)
+  const convertToCardProduct = (product: Product) => ({
+    id: product.id,
+    nome: product.nome,
+    descricao: product.descricao,
+    preco: product.preco,
+    quantidade: product.quantidade,
+    imagemUrl: product.fotos.length > 0 
+      ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${product.fotos[0].url}` 
+      : undefined
+  });
+
+  const canAddToCart = user?.tipoUsuario === 'COMPRADOR';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-breshop-beige via-breshop-pink/20 to-breshop-beige">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
 
-      <div className="container mx-auto px-4 py-8">
-        <h2 className="text-4xl font-bold text-breshop-navy mb-8 text-center font-display">
-          Produtos em Destaque
-        </h2>
-
-        {/* ... (código de loading/vazio) */}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map(product => (
-            <div
-              key={product.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col justify-between hover:shadow-xl transition"
-            >
-              <div>
-                <div className="h-48 bg-gray-200 overflow-hidden relative">
-                  {/* Badge de estoque */}
-                  {product.quantidade === 0 && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                      ESGOTADO
-                    </div>
-                  )}
-                  {product.quantidade > 0 && product.quantidade <= 5 && (
-                    <div className="absolute top-2 right-2 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                      ÚLTIMAS {product.quantidade}
-                    </div>
-                  )}
-                  
-                  {product.fotos.length > 0 ? (
-                    <img
-                      src={`${import.meta.env.VITE_API_URL.replace('/api', '')}${product.fotos[0].url}`}
-                      alt={product.nome}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      Sem imagem
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-bold text-breshop-navy mb-2 truncate">
-                    {product.nome}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {product.descricao}
-                  </p>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-xl font-bold text-breshop-navy">
-                      R$ {product.preco.toFixed(2)}
-                    </span>
-                    <span className={`text-xs ${product.quantidade === 0 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                      {product.quantidade === 0 ? 'Sem estoque' : `Estoque: ${product.quantidade}`}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Botão de Adicionar ao Carrinho */}
-              <div className="p-4 pt-0">
-                <Button
-                  onClick={() => handleAddToCart(product)}
-                  variant="primary"
-                  fullWidth
-                  disabled={product.quantidade === 0 || (user?.tipoUsuario === 'VENDEDOR')}
-                >
-                  {product.quantidade === 0 ? 'Indisponível' : 'Adicionar ao Carrinho'}
-                </Button>
-              </div>
-            </div>
-          ))}
+      {/* Header da Página */}
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-extrabold font-display mb-4">
+              Catálogo Completo
+            </h1>
+            <p className="text-xl text-gray-300">
+              Explore nossa coleção de peças únicas garimpadas com carinho
+            </p>
+          </div>
         </div>
       </div>
+
+      <div className="container mx-auto px-4 md:px-6 py-10">
+        {/* Barra de Filtros e Busca */}
+        <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 mb-10 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Campo de Busca */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Buscar produtos
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Nome ou descrição..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-3 pl-11 border-2 border-gray-300 rounded-xl focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all outline-none text-gray-900"
+                />
+                <svg 
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Ordenação */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Ordenar por
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all outline-none text-gray-900 cursor-pointer"
+              >
+                <option value="newest">Mais recentes</option>
+                <option value="lowest">Menor preço</option>
+                <option value="highest">Maior preço</option>
+                <option value="name">Nome (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Contador de Resultados */}
+          <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+            <p className="text-gray-600">
+              <span className="font-bold text-gray-900">{filteredProducts.length}</span> {filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados'}
+              {searchTerm && <span className="text-pink-600"> para "{searchTerm}"</span>}
+            </p>
+            
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="text-sm text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Limpar busca
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Grid de Produtos */}
+        {loading ? (
+          <div className="flex flex-col justify-center items-center h-96">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-pink-500 mb-4"></div>
+            <p className="text-gray-600 font-medium text-lg">Carregando produtos...</p>
+          </div>
+        ) : filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map(product => (
+              <ProductCard 
+                key={product.id} 
+                product={convertToCardProduct(product)}
+                onAddToCart={() => handleAddToCart(product)}
+                showCartButton={true}
+                disabled={!canAddToCart}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
+            <svg className="w-24 h-24 text-gray-400 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <h3 className="text-3xl font-bold text-gray-800 mb-3">Nenhum produto encontrado</h3>
+            <p className="text-gray-600 text-lg mb-6 max-w-md mx-auto">
+              {searchTerm 
+                ? `Não encontramos produtos para "${searchTerm}". Tente uma busca diferente.`
+                : 'Nenhum produto disponível no momento.'
+              }
+            </p>
+            <button
+              onClick={() => {
+                setSearchTerm('');
+                setSortBy('newest');
+              }}
+              className="inline-flex items-center gap-2 bg-pink-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-pink-600 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Limpar Filtros
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 border-t border-gray-800 py-12 mt-auto">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-gray-400">
+              &copy; {new Date().getFullYear()} BreShop. Consumo consciente, futuro sustentável.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
