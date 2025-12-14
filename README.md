@@ -1,464 +1,226 @@
-# 🛍️ BreShop - E-commerce para Brechós Online
+# BreShop - Plataforma de E-commerce
 
-**BreShop** é uma plataforma de e-commerce voltada exclusivamente para brechós online, onde vendedores podem cadastrar seus produtos e compradores podem navegar, comprar e realizar pagamentos de forma segura e organizada.
-
-> **+Um consumo consciente, sustentável & único**
-
----
-
-## 📋 Índice
-
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Funcionalidades Implementadas](#funcionalidades-implementadas)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação](#instalação)
-- [Configuração](#configuração)
-- [Como Executar](#como-executar)
-- [Rotas Disponíveis](#rotas-disponíveis)
-- [Gerenciamento de Estado](#gerenciamento-de-estado)
-- [Variáveis de Ambiente](#variáveis-de-ambiente)
-- [Paleta de Cores](#paleta-de-cores)
-- [Autor](#autor)
+**Nome:** Enzo Felipe Prudencio Avelino Lima  
+**Matrícula:** 20240065606
 
 ---
 
-## 🎯 Sobre o Projeto
+## 📖 Descrição do Projeto
 
-O BreShop resolve o problema da desorganização nas vendas de brechós online, que atualmente dependem de redes sociais como Instagram e WhatsApp para divulgar produtos e negociar com clientes. A plataforma centraliza todo o processo de compra e venda, tornando-o mais eficiente, confiável e prático.
-
-### Objetivos
-
-- Organizar e profissionalizar a venda de produtos em brechós online
-- Oferecer uma plataforma centralizada que simplifica a gestão de estoque, pagamentos e entregas
-- Criar um ambiente especializado para consumidores conscientes
-
-### Público-Alvo
-
-- **Vendedores**: Donos de brechós virtuais que buscam uma plataforma estruturada para seus negócios
-- **Compradores**: Pessoas que gostam de comprar roupas através de brechós e valorizam segurança e praticidade
+O **BreShop** é uma plataforma de marketplace desenvolvida para facilitar a compra e venda de produtos. O sistema conecta vendedores e compradores em um ambiente intuitivo, permitindo o cadastro de produtos, gestão de carrinho de compras, processamento de pedidos e controle de estoque automatizado. O projeto foi construído utilizando uma arquitetura moderna Full Stack, separando o backend do frontend.
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
+### Backend
+*   **Node.js** (v18+)
+*   **TypeScript** (v5.x)
+*   **Express** (v4.x) - Framework web robusto
+*   **Prisma ORM** (v5.x) - Manipulação de banco de dados
+*   **SQLite** - Banco de dados relacional (ambiente de desenvolvimento)
+*   **JWT (JsonWebToken)** - Autenticação e segurança de rotas
+*   **Multer** - Gerenciamento de upload de imagens
+
 ### Frontend
-
-- **React 18** - Biblioteca JavaScript para construção de interfaces
-- **TypeScript** - Superset JavaScript com tipagem estática
-- **Vite** - Build tool moderna e rápida
-- **Tailwind CSS** - Framework CSS utility-first para estilização
-- **React Router DOM v6** - Biblioteca de roteamento para navegação
-- **Axios** - Cliente HTTP para requisições à API
-- **Context API** - Gerenciamento de estado global
-
-### Ferramentas de Desenvolvimento
-
-- **ESLint** - Linter para identificar e corrigir problemas no código
-- **PostCSS** - Ferramenta para transformar CSS com plugins JavaScript
-- **Autoprefixer** - Plugin PostCSS para adicionar prefixos de navegadores automaticamente
+*   **React** (v18.x) - Biblioteca para interfaces de usuário
+*   **Vite** (v5.x) - Build tool de alta performance
+*   **TypeScript** - Tipagem estática para maior segurança
+*   **Tailwind CSS** (v3.x) - Framework de estilização utility-first
+*   **Axios** - Consumo de API
+*   **Context API** - Gerenciamento de estado global (Autenticação e Carrinho)
 
 ---
 
-## ✨ Funcionalidades Implementadas
+## 📋 Pré-requisitos
 
-### Autenticação de Usuários
-
-- ✅ **Cadastro de usuários** (vendedores e compradores) com validação de formulários
-- ✅ **Login de usuários** com autenticação segura via JWT
-- ✅ **Validação em tempo real** de campos de formulário
-- ✅ **Diferenciação de tipos de usuário** (comprador/vendedor)
-- ✅ **Logout seguro** com limpeza de token
-
-### Gerenciamento de Estado
-
-- ✅ **Context API** para estado de autenticação global
-- ✅ **Persistência de sessão** em localStorage
-- ✅ **Interceptadores Axios** para adicionar token automaticamente
-- ✅ **Redirecionamento automático** ao token expirar
-
-### Rotas e Navegação
-
-- ✅ **Rotas públicas** (login, registro, home, produtos)
-- ✅ **Rotas protegidas** para áreas autenticadas
-- ✅ **Redirecionamentos inteligentes** (usuários autenticados não acessam login/register)
-- ✅ **Navbar dinâmica** que responde ao estado de autenticação
-- ✅ **Design responsivo** adaptável a diferentes tamanhos de tela
-
-### Interface e Componentes
-
-- ✅ **Input** - Componente de entrada com validação e mensagens de erro
-- ✅ **Button** - Botão customizável com variantes de estilo
-- ✅ **Navbar** - Barra de navegação reutilizável com links contextuais
-- ✅ **AuthLayout** - Layout compartilhado para páginas de autenticação
-- ✅ **ProtectedRoute** - Componente para proteger rotas
-- ✅ **PublicRoute** - Componente para redirecionar usuários autenticados
-- ✅ **Página 404** para rotas não encontradas
-- ✅ **Paleta de cores personalizada** baseada na identidade visual do BreShop
+Para executar este projeto, certifique-se de ter instalado em sua máquina:
+*   [Node.js](https://nodejs.org/) (versão 18 ou superior)
+*   [Git](https://git-scm.com/)
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🔧 Instalação e Configuração
 
-```
-breshop-frontend/
-├── src/
-│   ├── components/
-│   │   ├── auth/
-│   │   │   ├── AuthLayout.tsx
-│   │   │   ├── LoginForm.tsx
-│   │   │   └── RegisterForm.tsx
-│   │   ├── common/
-│   │   │   ├── Button.tsx
-│   │   │   └── Input.tsx
-│   │   ├── layout/
-│   │   │   └── Navbar.tsx
-│   │   ├── ProtectedRoute.tsx
-│   │   └── PublicRoute.tsx
-│   ├── contexts/
-│   │   └── AuthContext.tsx
-│   ├── pages/
-│   │   ├── auth/
-│   │   │   ├── LoginPage.tsx
-│   │   │   └── RegisterPage.tsx
-│   │   ├── HomePage.tsx
-│   │   ├── ProductsPage.tsx
-│   │   └── NotFoundPage.tsx
-│   ├── services/
-│   │   ├── api.ts
-│   │   └── authService.ts
-│   ├── types/
-│   │   └── auth.types.ts
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
-├── public/
-├── .env
-├── .gitignore
-├── index.html
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-├── vite.config.ts
-└── README.md
-```
+Como o projeto é dividido em dois repositórios, siga os passos abaixo para configurar o ambiente completo.
 
----
+### 1. Clonar os Repositórios
 
-## 📦 Pré-requisitos
-
-Antes de começar, certifique-se de ter instalado em sua máquina:
-
-- **Node.js** (versão 18 ou superior)
-- **npm** ou **yarn** (gerenciador de pacotes)
-- **Git** (para clonar o repositório)
-- **Backend BreShop** rodando em http://localhost:3333
-
----
-
-## 🔧 Instalação
-
-### 1. Clonar o Repositório
+Recomenda-se criar uma pasta raiz para organizar o projeto:
 
 ```bash
-git clone https://github.com/seu-usuario/breshop-frontend.git
-cd breshop-frontend
+mkdir BreShop-Project
+cd BreShop-Project
+
+# Clone o Backend
+git clone https://github.com/enzo-felipe0/BreShop-backend.git backend
+
+# Clone o Frontend
+git clone https://github.com/enzo-felipe0/BreShop-frontend.git frontend
 ```
 
-### 2. Instalar Dependências
+### 2. Configuração do Backend (API)
 
 ```bash
+cd backend
+
+# 2.1 Instalar dependências
 npm install
+
+# 2.2 Configurar Variáveis de Ambiente
+# Crie um arquivo .env na raiz da pasta backend e insira:
+PORT=3000
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="segredo_super_secreto_breshop"
+FRONTEND_URL="http://localhost:5173"
+
+#alguns itens do .env não estão aqui pois realmente são privados
+
+# 2.3 Configurar Banco de Dados
+npx prisma migrate dev --name init
 ```
 
-### 3. Dependências Principais Instaladas
+### 3. Configuração do Frontend (Interface)
 
-As seguintes dependências serão instaladas automaticamente:
-
-```json
-{
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0",
-    "axios": "^1.7.7"
-  },
-  "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.10"
-  }
-}
-```
-
----
-
-## ⚙️ Configuração
-
-### 1. Criar Arquivo .env
-
-Crie um arquivo `.env` na raiz do projeto:
-
-```env
-VITE_API_URL=http://localhost:3000/api
-```
-
-**Importante:** No Vite, todas as variáveis de ambiente devem começar com `VITE_`
-
-### 2. Verificar .gitignore
-
-Certifique-se de que o arquivo `.gitignore` contém:
-
-```
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Dependencies
-node_modules/
-
-# Build
-dist/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-```
-
----
-
-## ▶️ Como Executar
-
-### Pré-requisito: Backend Rodando
-
-Certifique-se de que o backend está rodando em http://localhost:3000:
+Abra um novo terminal para o frontend:
 
 ```bash
-cd ../breshop-backend
+cd frontend
+
+# 3.1 Instalar dependências
+npm install
+
+# 3.2 Configurar Variáveis de Ambiente
+# Crie um arquivo .env na raiz da pasta frontend e insira:
+VITE_API_URL="http://localhost:3000/api"
+```
+
+---
+
+## ▶️ Instruções de Execução
+
+Você precisará de dois terminais abertos simultaneamente.
+
+**Terminal 1 - Backend:**
+```bash
+cd backend
 npm run dev
 ```
+*O servidor iniciará em: `http://localhost:3000`*
 
-### Modo de Desenvolvimento
-
-Em outra aba do terminal, inicie o frontend:
-
+**Terminal 2 - Frontend:**
 ```bash
-cd breshop-frontend
+cd frontend
 npm run dev
 ```
-
-O projeto estará disponível em: **http://localhost:5173**
-
-### Build para Produção
-
-Para gerar a versão otimizada para produção:
-
-```bash
-npm run build
-```
-
-Gera pasta `dist/` com arquivos otimizados.
-
-### Preview da Build
-
-```bash
-npm run preview
-```
+*A aplicação abrirá em: `http://localhost:5173`*
 
 ---
 
-## 🗺️ Rotas Disponíveis
+## 📂 Estrutura do Projeto
 
-| Rota | Tipo | Autenticado? | Descrição |
-|------|------|-------------|-----------|
-| `/` | Pública | Não importa | Página inicial com apresentação do BreShop |
-| `/login` | Pública | Redireciona se sim | Página de autenticação de usuários |
-| `/register` | Pública | Redireciona se sim | Página de cadastro de novos usuários |
-| `/products` | Pública | Não importa | Página de catálogo de produtos |
-| `*` | - | - | Página 404 para rotas não encontradas |
+### Backend
+*   `src/controllers`: Lógica das requisições (Auth, Produtos, Pedidos).
+*   `src/routes`: Definição dos endpoints da API.
+*   `src/services`: Regras de negócio.
+*   `src/middlewares`: Autenticação e validações.
+*   `prisma/schema.prisma`: Modelagem do banco de dados.
 
-**Notas:**
-- Rotas públicas redirecionam para `/` se o usuário já estiver autenticado
-- `/products` é acessível por todos (com funcionalidades restritas para não autenticados futuramente)
-- Não há rotas protegidas ainda, todas são públicas para teste
-
----
-
-## 🎭 Gerenciamento de Estado
-
-### Context API (AuthContext)
-
-O estado de autenticação é gerenciado globalmente via **Context API**:
-
-```typescript
-const { user, token, loading, isAuthenticated, login, register, logout } = useAuth();
-```
-
-**Propriedades do Context:**
-
-| Propriedade | Tipo | Descrição |
-|------------|------|-----------|
-| `user` | User \| null | Dados do usuário logado |
-| `token` | string \| null | Token JWT do usuário |
-| `loading` | boolean | Indica se está carregando dados |
-| `isAuthenticated` | boolean | Boolean indicando se está autenticado |
-| `login()` | Function | Função para fazer login |
-| `register()` | Function | Função para registrar novo usuário |
-| `logout()` | Function | Função para fazer logout |
-
-### Persistência de Sessão
-
-O estado é persistido em `localStorage`:
-
-- Token salvo em: `@breshop:token`
-- Dados do usuário em: `@breshop:user`
-
-A sessão é restaurada automaticamente ao recarregar a página.
-
-### Interceptadores Axios
-
-O serviço de API (`src/services/api.ts`) possui interceptadores que:
-
-1. **Request:** Adiciona token JWT automaticamente em requisições autenticadas
-2. **Response:** Trata erros 401 e redireciona para login se necessário
+### Frontend
+*   `src/pages`: Telas da aplicação (Home, Login, Dashboard, Checkout).
+*   `src/components`: Componentes reutilizáveis (Navbar, ProductCard).
+*   `src/contexts`: Estados globais (AuthContext, CartContext).
+*   `src/services`: Configuração do Axios.
 
 ---
 
-## 🔐 Autenticação e Autorização
+## ✅ Funcionalidades Implementadas
 
-### Como Funciona
+O sistema atende aos seguintes requisitos funcionais:
 
-1. Usuário faz login/cadastro
-2. Backend retorna token JWT
-3. Token é salvo no localStorage via AuthContext
-4. Interceptador Axios adiciona token em requisições futuras
-5. Se token expirar, usuário é redirecionado para login
-
-### Rotas Protegidas
-
-Use o componente `ProtectedRoute` para proteger páginas:
-
-```typescript
-<Route
-  path="/dashboard"
-  element={
-    <ProtectedRoute>
-      <DashboardPage />
-    </ProtectedRoute>
-  }
-/>
-```
-
-### Rotas Públicas com Redirecionamento
-
-Use `PublicRoute` para páginas de autenticação que devem redirecionar usuários autenticados:
-
-```typescript
-<Route
-  path="/login"
-  element={
-    <PublicRoute>
-      <LoginPage />
-    </PublicRoute>
-  }
-/>
-```
+- [x] **Cadastro de Usuários:** Vendedor e Comprador podem criar conta com Nome, E-mail, Senha e Tipo.
+- [x] **Autenticação:** Login seguro via E-mail e Senha (JWT).
+- [x] **Gestão de Produtos:** Vendedor cadastra produtos com nome, descrição, preço, quantidade e upload de fotos.
+- [x] **Catálogo:** Exibição pública dos produtos na Home.
+- [x] **Carrinho de Compras:** Comprador adiciona itens e visualiza resumo.
+- [x] **Finalização de Compra:** Registro do pedido e baixa automática no estoque.
+- [x] **Histórico de Transações:**
+    - Comprador visualiza suas compras.
+    - Vendedor visualiza suas vendas.
+- [x] **Status do Pedido:** Acompanhamento (Em processamento, Enviado, Entregue).
+- [x] **Edição de Perfil:** Atualização de dados cadastrais básicos.
+- [x] **Notificações:** Envio de e-mail na confirmação do pedido.
 
 ---
 
-## 🌐 Variáveis de Ambiente
+## 🗄️ Modelo de Dados
 
-| Variável | Descrição | Padrão |
-|----------|-----------|--------|
-| VITE_API_URL | URL da API backend | `http://localhost:3000/api` |
+O banco de dados (SQLite via Prisma) possui as seguintes entidades principais:
 
----
+*   **User:** Armazena dados de acesso e perfil.
+*   **Product:** Dados do item à venda, relacionado ao User (vendedor).
+*   **ProductPhoto:** URLs das imagens vinculadas ao Produto.
+*   **Order:** Cabeçalho do pedido, vinculado ao User (comprador).
+*   **OrderItem:** Itens do pedido, registrando preço no momento da compra.
 
-## 🎨 Paleta de Cores
-
-O projeto utiliza uma paleta de cores personalizada inspirada no conceito de consumo consciente e sustentável:
-
-| Cor | Código Hex | Uso |
-|-----|-----------|------|
-| **Beige** | `#F5E6D3` | Background principal, tons neutros |
-| **Pink** | `#E8A5A0` | Botões secundários, destaques |
-| **Navy** | `#2C3E50` | Textos principais, botões primários |
-| **Gold** | `#B8A76B` | Bordas, acentos, estados hover |
-| **Coral** | `#D89B94` | Elementos de validação, destaques secundários |
-
-### Como Usar as Cores
-
-As cores estão configuradas no `tailwind.config.js` e podem ser usadas como classes Tailwind:
-
-```typescript
-<div className="bg-breshop-beige text-breshop-navy">
-  <button className="bg-breshop-navy hover:bg-breshop-gold">
-    Entrar
-  </button>
-  <button className="bg-breshop-pink hover:bg-breshop-coral">
-    Cadastrar
-  </button>
-</div>
-```
+*(Verifique a pasta `prisma/schema.prisma` para detalhes das relações)*
 
 ---
 
-## 📄 Requisitos Funcionais Implementados
+## 🔌 Rotas da API
 
-Conforme o PRD (Product Requirements Document):
-
-- ✅ **RF01**: O sistema permite que o vendedor crie uma conta informando nome, e-mail, senha e tipo de usuário
-- ✅ **RF02**: O sistema autentica os usuários através de e-mail e senha
-- 🔄 **RF03**: O sistema deve permitir que o vendedor cadastre produtos com nome, descrição, preço, quantidade e fotos.
-
-- 🔄 **RF04**: O sistema deve exibir os produtos cadastrados em um catálogo acessível ao público.
-
-- 🔄 **RF05**: O sistema deve permitir que o comprador adicione produtos ao carrinho e finalize a compra.
-
-- 🔄 **RF06**: O sistema deve registrar e exibir o histórico de compras e vendas de cada usuário.
-
-- 🔄 **RF07**: O sistema deve atualizar automaticamente o estoque após cada venda concluída.
-
-- 🔄 **RF08**: O sistema deve permitir que o comprador acompanhe o status do pedido (em processamento, enviado, entregue).
-
-- 🔄 **RF09**: O sistema deve permitir que o usuário edite informações básicas do seu perfil, como nome e senha.
-
-- 🔄 **RF10**: O sistema deve enviar notificações ou confirmações de pedido por e-mail.
----
-
-## 🧪 Testar a Aplicação
-
-### Fluxo Completo
-
-1. Certifique-se de que o backend está rodando: `http://localhost:3000`
-2. Inicie o frontend: `npm run dev`
-3. Abra http://localhost:5173 no navegador
-4. Clique em "Cadastrar"
-5. Preencha o formulário de registro
-6. Clique em "Cadastrar"
-7. Você será redirecionado para a home e seu nome aparecerá na navbar
-8. Clique em "Sair" para fazer logout
-9. Tente acessar `/products` (funciona para todos)
-10. Clique em "Entrar" para fazer login novamente
-
-## 👨‍💻 Autor
-
-**Enzo Felipe Prudencio Avelino Lima**  
-Matrícula: 20240065606
+*   `POST /auth/register` - Criar conta
+*   `POST /auth/login` - Autenticar
+*   `GET /products` - Listar produtos
+*   `GET /products/:id` - Detalhes do produto
+*   `POST /products` - Criar produto (Auth + Vendedor)
+*   `POST /cart/checkout` - Realizar compra (Auth + Comprador)
+*   `GET /orders/my-orders` - Histórico de compras
+*   `GET /orders/sales` - Histórico de vendas
 
 ---
 
-## 📝 Licença
+## 📸 Screenshots
 
-Este projeto foi desenvolvido como parte de um trabalho acadêmico.
+Abaixo estão os links para as capturas de tela das principais funcionalidades:
+  * Home:
+  ![Home](screenshots/home.png)
+  * Produtos exibidos na Home
+   ![Produtos na Home](screenshots/home_produtos.png)
+   * Página de produto
+  ![Produto Page](screenshots/produtos.png)
+  * Tela de Login
+  ![Tela de Login](screenshots/login.png)
+  * Carrinho
+  ![Carrinho de Compras](screenshots/carrinho.png)
+  * Cadastro de Produtos
+   ![Cadastrar Produtos](screenshots/cadastrar_produtos.png)
+   * Histórico de Vendas
+   ![Histórico de Vendas](screenshots/vendas.png)
+
+   * Pedidos
+   ![Meus Pedidos](screenshots/pedidos.png)
+
+---
+
+## 🎥 Vídeo Demonstrativo
+
+Confira a demonstração completa do sistema em funcionamento:
+[Link para o Vídeo](https://youtu.be/Yw8EwrRXClA)
+
+---
+
+## 💡 Decisões Técnicas e Justificativas
+
+1.  **Prisma + SQLite:** Escolhido pela facilidade de configuração local e excelente suporte a TypeScript, permitindo desenvolvimento ágil sem configurar servidores de banco complexos.
+2.  **Tailwind CSS:** Utilizado para acelerar a estilização e garantir responsividade sem a necessidade de escrever CSS puro extenso. Além de familiaridade prévia.
+3. **Ambiente JavaScript (React + Node):** Escolhi um ambiente JS devido a minha familiaridade prévia. Não queria ter surpresas indesejadas que as vezes ocorrem quando lidamos com tecnologias novas.  
+
+---
+
+## 🔮 Melhorias Futuras
+
+*   Integração com gateway de pagamentos real (Stripe/Mercado Pago).
+*   Sistema de chat em tempo real entre vendedor e comprador.
+*   Deploy da aplicação em nuvem (Render/Vercel).
+*   Implementação de testes unitários e de integração (Jest/Cypress).
